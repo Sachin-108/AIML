@@ -1,0 +1,13 @@
+<!-- result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+</head>
+<body>
+    <h1>Prediction Result</h1>
+    <p>Predicted class: {{ predicted_label }}</p>
+	<a href="/{{ predicted_label }}/">Visit Page</a>
+    <a href="{% url 'predict_image' %}">Back</a>
+</body>
+</html>

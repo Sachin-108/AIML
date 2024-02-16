@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expression Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            /* Set background image */
+            background-image: url('image/background.jpg');
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 50px;
+            /* Adjust text color for visibility on the background */
+            color: white;
+        }
+        #upload-form {
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        label:hover {
+            background-color: #2980b9;
+        }
+        button[type="submit"] {
+            background-color: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button[type="submit"]:hover {
+            background-color: #219e54;
+        }
+        #result {
+            text-align: center;
+            margin-top: 20px;
+        }
+        img {
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #333;">Expression Detection</h1>
+
+    <!-- Upload Form -->
+    <form id="upload-form" action="{% url 'run_script' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="image-upload">Upload Image</label>
+        <input type="file" id="image-upload" name="image" accept="image/*" required>
+        <button type="submit">Process Image</button>
+    </form>
+
+    <!-- Result Display -->
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch(this.getAttribute('action'), {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json()).then(data => {
+                var resultElement = document.getElementById('result');
+                if (data.error) {
+                    resultElement.innerHTML = 'Error: ' + data.error;
+                } else if (data.image_url) {
+                    resultElement.innerHTML = '<p>Processed Image:</p><img src="' + data.image_url + '" alt="Processed Image" height="200" width="300">';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
